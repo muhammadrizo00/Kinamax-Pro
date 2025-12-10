@@ -1,0 +1,26 @@
+version: '3.8'
+
+
+services:
+  bot:
+    build: .
+    container_name: kinamax_bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/app/logs
+      - ./kinamax.db:/app/kinamax.db
+      - ./temp:/app/temp
+      - ./downloads:/app/downloads
+    networks:
+      - kinamax_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  kinamax_network:
+    driver: bridge
