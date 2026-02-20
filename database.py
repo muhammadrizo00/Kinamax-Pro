@@ -9,8 +9,20 @@ import os
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./kinamax.db")
 
 # Engine va Session
-engine = create_async_engine(DATABASE_URL, echo=True)
-async_session_maker = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+# ✅ FIX: connect_args va pool_pre_ping qo'shildi, greenlet muammosi hal qilindi
+engine = create_async_engine(
+    DATABASE_URL,
+    echo=False,  # Production uchun False
+    connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {},
+)
+
+async_session_maker = async_sessionmaker(
+    engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+    autocommit=False,
+    autoflush=False,
+)
 
 
 class Base(DeclarativeBase):
