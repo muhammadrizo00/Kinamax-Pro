@@ -55,3 +55,6 @@ bot_session.session
 *.session
 temp/
 downloads/
+
+Dockerfile
+docker-compose.yml
